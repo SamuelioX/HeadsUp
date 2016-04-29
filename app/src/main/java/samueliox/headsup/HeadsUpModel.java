@@ -15,9 +15,9 @@ public class HeadsUpModel extends HeadsUpBase {
     private int scoreCounter, listTracker;
     private String currentWord;
     private List<String> shuffledLibrary;
-    private Queue<String> allCorrectWords, allWrongWords;
+    private Queue<String> allCorrectWords, allSkippedWords;
 
-    public HeadsUpModel() {
+    public HeadsUpModel(int category) {
         super();
         //keeps score
         scoreCounter = 0;
@@ -27,9 +27,11 @@ public class HeadsUpModel extends HeadsUpBase {
         currentWord = "";
         //the list of words used for the game that are shuffled
         shuffledLibrary = null;
-        //list of words that were correct and wrong are added to a queue
+        //list of words that were correct and Skipped are added to a queue
         allCorrectWords = new LinkedList<>();
-        allWrongWords = new LinkedList<>();
+        allSkippedWords = new LinkedList<>();
+        startGame(category);
+        notifyObservers();
     }
 
     /**
@@ -44,7 +46,6 @@ public class HeadsUpModel extends HeadsUpBase {
 
         //set currentWord
         setCurrentWord();
-
     }
 
     /**
@@ -80,7 +81,7 @@ public class HeadsUpModel extends HeadsUpBase {
      * Method that goes to the next card in the list
      */
     public void skipCurrentWord(){
-        allWrongWords.add(currentWord);
+        allSkippedWords.add(currentWord);
         setCurrentWord();
     }
 
@@ -134,14 +135,21 @@ public class HeadsUpModel extends HeadsUpBase {
     }
 
     /**
-     * Method that gets the queue with all the wrong words to be
+     * Method that gets the queue with all the Skipped words to be
      * displayed in the end scorecard
      * @return queue of all the words that were incorrect
      */
-    public Queue<String> getAllWrongWords(){
-        return allWrongWords;
+    public Queue<String> getAllSkippedWords(){
+        return allSkippedWords;
     }
 
+    /**
+     * Method that returns where in the library we are
+     * @return place where we left off
+     */
+    public int getListTracker(){
+        return listTracker;
+    }
     /**
      * Method that resets the game state so another game can be played
      */
