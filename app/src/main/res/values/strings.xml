@@ -7,9 +7,13 @@
     <string name="skipped_words_text">skipped_words</string>
     <string name="current_word_text">Current Word</string>
     <string name="title_text">Heads Up</string>
-    <string name="play_button_text">Play</string>
+    <string name="play_button_text">Random</string>
     <string name="skip_button">Skip</string>
     <string name="correct_button">Correct</string>
     <string name="replay_button">Replay</string>
     <string name="main_menu_button">Main Menu</string>
+    <string name="celebrities_button">Celebrities</string>
+    <string name="animals_button">Animals</string>
+    <string name="cartoons_button">Cartoons</string>
+    <string name="category_select_text">Please Select a Category</string>
 </resources>

@@ -7,6 +7,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -17,6 +19,13 @@ public class ScoreboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Remove title bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        //Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        //set content view AFTER ABOVE sequence (to avoid crash)
         setContentView(R.layout.scoreboard);
 
         //textviews
@@ -25,13 +34,17 @@ public class ScoreboardActivity extends AppCompatActivity {
         TextView scoreText = (TextView)findViewById(R.id.score_text);
 
         //gets the portions of text that populate the textviews
-        //String score = getIntent().getStringExtra("model", "asdf");
+        final int score = getIntent().getIntExtra("points", -1);
+        final int category = getIntent().getIntExtra("category", 1);
+        String correctWords = getIntent().getStringExtra("correctWords");
+        String skippedWords = getIntent().getStringExtra("skippedWords");
 
         Button replayButton = (Button)findViewById(R.id.replay_button);
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                intent.putExtra("category", category);
                 startActivity(intent);
             }
         });
@@ -46,8 +59,8 @@ public class ScoreboardActivity extends AppCompatActivity {
         });
 
         //sets the textviews
-        currentWordText.setText("A correct word");
-        skippedWordText.setText("skipped word");
-       // scoreText.append("" + score);
+        currentWordText.setText(correctWords);
+        skippedWordText.setText(skippedWords);
+        scoreText.append("" + score);
     }
 }

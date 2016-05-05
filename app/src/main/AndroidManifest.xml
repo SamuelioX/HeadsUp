@@ -7,7 +7,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".MainMenuActivity"
             android:label="@string/app_name"
@@ -18,8 +18,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameActivity"
-            android:screenOrientation="landscape"></activity>
-        <activity android:name=".ScoreboardActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="landscape">
+        </activity>
+        <activity android:name=".ScoreboardActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

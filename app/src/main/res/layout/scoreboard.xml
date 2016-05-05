@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/correct_words"
-        android:id="@+id/correct_words_text"
-        android:layout_below="@+id/score_text"
-        android:layout_alignLeft="@+id/skipped_words_text"
-        android:layout_alignStart="@+id/skipped_words_text" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,18 +8,9 @@
         android:text="@string/scoreboard_title"
         android:id="@+id/scboard_title"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/correct_words_text"
-        android:layout_alignStart="@+id/correct_words_text"
-        android:layout_marginTop="32dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/skipped_words_text"
-        android:id="@+id/skipped_words_text"
-        android:layout_below="@+id/correct_words_text"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignRight="@+id/main_menu_button"
+        android:layout_alignEnd="@+id/main_menu_button"
+        android:layout_marginTop="50dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,27 +18,72 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/score_text"
         android:id="@+id/score_text"
-        android:layout_marginTop="28dp"
         android:layout_below="@+id/scboard_title"
-        android:layout_alignLeft="@+id/correct_words_text"
-        android:layout_alignStart="@+id/correct_words_text" />
+        android:layout_centerHorizontal="true" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/scrollViewCorrect"
+        android:layout_below="@+id/score_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="50dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/correct_words"
+                android:id="@+id/correct_words_text"
+                android:layout_above="@+id/scrollView"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/scrollViewCorrect"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/skipped_words_text"
+                android:id="@+id/skipped_words_text"
+                android:layout_below="@+id/correct_words_text"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </ScrollView>
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/replay_button"
         android:id="@+id/replay_button"
-        android:layout_marginBottom="137dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/scrollView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="52dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/main_menu_button"
         android:id="@+id/main_menu_button"
-        android:layout_alignTop="@+id/replay_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="52dp" />
+        android:layout_below="@+id/replay_button"
+        android:layout_centerHorizontal="true" />
+
+
 </RelativeLayout>

@@ -6,16 +6,20 @@ import java.util.*;
  * Created by samuel on 4/14/2016.
  */
 public class HeadsUpModel extends Observable {
-    public static final String[] animalList = {"cat", "dog", "rat", "moose", "reindeer", "ant", "bee"};
+    public static final String[] animalList = {"cat", "dog", "rat", "moose", "reindeer", "ant",
+            "bee", "hawk", "pigeon", "seagull", "raven", "mongoose", "snake", "bear"};
     public static final String[] celebList = {"Tom Hanks", "Ellen", "George Clooney",
-            "Tina Fey", "Alec Baldwin", "Harrison Ford", "Brad Pitt"};
+            "Tina Fey", "Alec Baldwin", "Harrison Ford", "Brad Pitt", "Lindsay Lohan", "Ryan Gosling" +
+            "Adele", "Halle Barry", "Michael Jackson", "Taylor Swift", "Paul McCartney",
+            "Ringo Starr", "John Lennon", "George Harrison"};
     public static final String[] cartoonList = {"The Simpsons", "Futurama", "Family Guy",
-            "Bob's Burgers", "Archer", "Aqua Teen Hunger Force", "The Flintstones"};
+            "Bob's Burgers", "Archer", "Aqua Teen Hunger Force", "The Flintstones",
+            "The Jetsons", "Dragon Ball Z", "Pokemon", "Teenage Mutant Ninja Turtles"};
 
     private int scoreCounter, listTracker;
     private String currentWord;
     private List<String> shuffledLibrary;
-    private Queue<String> allCorrectWords, allSkippedWords;
+    private StringBuilder allCorrectWords, allSkippedWords;
 
     public HeadsUpModel(int category) {
         super();
@@ -28,8 +32,8 @@ public class HeadsUpModel extends Observable {
         //the list of words used for the game that are shuffled
         shuffledLibrary = null;
         //list of words that were correct and Skipped are added to a queue
-        allCorrectWords = new LinkedList<>();
-        allSkippedWords = new LinkedList<>();
+        allCorrectWords = new StringBuilder();
+        allSkippedWords = new StringBuilder();
         startGame(category);
         notifyObservers();
     }
@@ -44,6 +48,8 @@ public class HeadsUpModel extends Observable {
         //shuffles the library
         shuffledLibrary = shuffleList(category);
 
+        allCorrectWords.append("Correct Words: \n");
+        allSkippedWords.append("Skipped Words: \n");
         //set currentWord
         setCurrentWord();
     }
@@ -73,7 +79,7 @@ public class HeadsUpModel extends Observable {
      */
     public void addCorrectWord(){
         scoreCounter++;
-        allCorrectWords.add(currentWord);
+        allCorrectWords.append(currentWord + "\n");
         setCurrentWord();
     }
 
@@ -81,7 +87,7 @@ public class HeadsUpModel extends Observable {
      * Method that goes to the next card in the list
      */
     public void skipCurrentWord(){
-        allSkippedWords.add(currentWord);
+        allSkippedWords.append(currentWord + "\n");
         setCurrentWord();
     }
 
@@ -99,9 +105,9 @@ public class HeadsUpModel extends Observable {
     public String[] getLibrary(int category){
         switch(category) {
             case 0:
-                return animalList;
-            case 1:
                 return celebList;
+            case 1:
+                return animalList;
             case 2:
                 return cartoonList;
         }
@@ -120,9 +126,20 @@ public class HeadsUpModel extends Observable {
      * Method that sets the current word in use
      */
     private void setCurrentWord(){
-        currentWord = shuffledLibrary.get(listTracker++);
-        setChanged();
-        notifyObservers();
+        //find a way to end the game based on timer here too if we want
+        if(!checkGameOver()) {
+            currentWord = shuffledLibrary.get(listTracker++);
+            setChanged();
+            notifyObservers();
+        }
+    }
+
+    /**
+     * Method that checks if the game is over by comparing the length  of the list tracker
+     * @return true if the listracker is greater or equal to the shuffled list
+     */
+    public boolean checkGameOver(){
+        return listTracker >= getShuffledLibrary().size();
     }
 
     /**
@@ -130,7 +147,7 @@ public class HeadsUpModel extends Observable {
      * displayed in the end scorecard
      * @return queue of all the words that were correct
      */
-    public Queue<String> getAllCorrectWords(){
+    public StringBuilder getAllCorrectWords(){
         return allCorrectWords;
     }
 
@@ -139,7 +156,7 @@ public class HeadsUpModel extends Observable {
      * displayed in the end scorecard
      * @return queue of all the words that were incorrect
      */
-    public Queue<String> getAllSkippedWords(){
+    public StringBuilder getAllSkippedWords(){
         return allSkippedWords;
     }
 

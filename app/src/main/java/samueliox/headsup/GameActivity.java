@@ -8,6 +8,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,9 +24,9 @@ import java.util.Observer;
 public class GameActivity extends AppCompatActivity implements SensorEventListener, Observer {
     private HeadsUpModel model;
     private TextView gameText;
-    private RelativeLayout background;
     private Sensor mySensor;
     private SensorManager SM;
+    private int category;
     public final double ACTIONTHRESHOLD = 8.5;
     public final double UNBLOCKTHRESHOLD = 3.5;
     public boolean actionsAreBlocked = false;
@@ -33,10 +35,18 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game);
+        //Remove title bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        //Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        //set content view AFTER ABOVE sequence (to avoid crash)
+        this.setContentView(R.layout.game);
+        category = getIntent().getIntExtra("category", -1);
 
         gameText = (TextView) findViewById(R.id.current_word_text);
-        model = new HeadsUpModel(1);
+        model = new HeadsUpModel(category);
         gameText.setText(model.getCurrentWord());
         playGame();
     }
@@ -80,8 +90,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
         //send intent into scoreboard activity
         Intent intent = new Intent(getApplicationContext(), ScoreboardActivity.class);
-        intent.putExtra("model", "test");
+        intent.putExtra("points", model.getScore());
+        intent.putExtra("category", category);
+        intent.putExtra("correctWords", model.getAllCorrectWords().toString());
+        intent.putExtra("skippedWords", model.getAllSkippedWords().toString());
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -115,9 +129,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private void pass() {
-
         model.skipCurrentWord();
-
         actionsAreBlocked = true;
     }
 
@@ -125,9 +137,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void update(Observable observable, Object data) {
         String nextWord = model.getCurrentWord();
 
-        if (nextWord == null) {
+        if (model.checkGameOver()) {
             //TODO gameover functionality
-
+            endGame();
             return;
         }
         gameText.setText(nextWord);
