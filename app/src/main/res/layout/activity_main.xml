@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="samueliox.headsup.MainMenuActivity">
+    tools:context="samueliox.headsup.MainMenuActivity"
+    android:background="@android:color/holo_blue_bright">
 
     <include layout="@layout/content_main"/>
 
