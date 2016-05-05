@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Created by samuel on 4/14/2016.
  */
-public class HeadsUpModel extends HeadsUpBase {
+public class HeadsUpModel extends Observable {
     public static final String[] animalList = {"cat", "dog", "rat", "moose", "reindeer", "ant", "bee"};
     public static final String[] celebList = {"Tom Hanks", "Ellen", "George Clooney",
             "Tina Fey", "Alec Baldwin", "Harrison Ford", "Brad Pitt"};

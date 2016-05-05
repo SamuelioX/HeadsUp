@@ -21,7 +21,6 @@ import java.util.Observer;
  */
 public class GameActivity extends AppCompatActivity implements SensorEventListener, Observer {
     private HeadsUpModel model;
-    private HeadsUpView view;
     private TextView gameText;
     private RelativeLayout background;
     private Sensor mySensor;
@@ -38,8 +37,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
         gameText = (TextView) findViewById(R.id.current_word_text);
         model = new HeadsUpModel(1);
-        view = new HeadsUpView(model);
-        gameText.setText(view.getCurrentWordDisplay());
+        gameText.setText(model.getCurrentWord());
         playGame();
     }
 
@@ -52,23 +50,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         correctButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.addCorrectWord();
-                gameText.setText(view.getCurrentWordDisplay());
-                if (model.getScore() == 2 || model.getListTracker() == model.getShuffledLibrary().size()) {
-                    endGame();
-                }
+                correct();
             }
         });
 
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (model.getListTracker() == model.getShuffledLibrary().size()) {
-                    endGame();
-                } else {
-                    model.skipCurrentWord();
-                    gameText.setText(view.getCurrentWordDisplay());
-                }
+                pass();
             }
         });
 
@@ -88,15 +77,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
      * Method that ends the game and brings up the scoreboard activity
      */
     public void endGame() {
-        //sets the end view based on the string in the model
-        view.setCorrectScoreboardDisplay();
-        view.setSkippedScoreboardDisplay();
 
         //send intent into scoreboard activity
         Intent intent = new Intent(getApplicationContext(), ScoreboardActivity.class);
-        intent.putExtra("points", model.getScore());
-        intent.putExtra("correctWords", view.getCorrectScoreboardDisplay());
-        intent.putExtra("skippedWords", view.getSkippedScoreboardDisplay());
+        intent.putExtra("model", "test");
         startActivity(intent);
     }
 

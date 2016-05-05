@@ -25,9 +25,7 @@ public class ScoreboardActivity extends AppCompatActivity {
         TextView scoreText = (TextView)findViewById(R.id.score_text);
 
         //gets the portions of text that populate the textviews
-        final int score = getIntent().getIntExtra("points", -1);
-        String correctWords = getIntent().getStringExtra("correctWords");
-        String skippedWords = getIntent().getStringExtra("skippedWords");
+        //String score = getIntent().getStringExtra("model", "asdf");
 
         Button replayButton = (Button)findViewById(R.id.replay_button);
         replayButton.setOnClickListener(new View.OnClickListener() {
@@ -48,8 +46,8 @@ public class ScoreboardActivity extends AppCompatActivity {
         });
 
         //sets the textviews
-        currentWordText.setText(correctWords);
-        skippedWordText.setText(skippedWords);
-        scoreText.append("" + score);
+        currentWordText.setText("A correct word");
+        skippedWordText.setText("skipped word");
+       // scoreText.append("" + score);
     }
 }
