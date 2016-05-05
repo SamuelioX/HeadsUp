@@ -1,30 +1,25 @@
 package samueliox.headsup;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.app.Activity;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
- *
  * @author Samuel No
  * @version 4/20/2016
  */
-public class GameActivity extends AppCompatActivity implements SensorEventListener {
+public class GameActivity extends AppCompatActivity implements SensorEventListener, Observer {
     private HeadsUpModel model;
     private HeadsUpView view;
     private TextView gameText;
@@ -34,6 +29,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public final double ACTIONTHRESHOLD = 8.5;
     public final double UNBLOCKTHRESHOLD = 3.5;
     public boolean actionsAreBlocked = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +80,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
         //Register sensor Listener
         SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+        model.addObserver(this);
     }
 
     /**
@@ -129,20 +127,26 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     private void correct() {
         model.addCorrectWord();
-        gameText.setText(view.getCurrentWordDisplay());
-        if (model.getScore() == 2 || model.getListTracker() == model.getShuffledLibrary().size()) {
-            endGame();
-        }
         actionsAreBlocked = true;
     }
 
     private void pass() {
-        if (model.getListTracker() == model.getShuffledLibrary().size()) {
-            endGame();
-        } else {
-            model.skipCurrentWord();
-            gameText.setText(view.getCurrentWordDisplay());
-        }
+
+        model.skipCurrentWord();
+
         actionsAreBlocked = true;
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        String nextWord = model.getCurrentWord();
+
+        if (nextWord == null) {
+            //TODO gameover functionality
+
+            return;
+        }
+        gameText.setText(nextWord);
+
     }
 }

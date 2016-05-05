@@ -119,7 +119,7 @@ public class HeadsUpModel extends HeadsUpBase {
     /**
      * Method that sets the current word in use
      */
-    public void setCurrentWord(){
+    private void setCurrentWord(){
         currentWord = shuffledLibrary.get(listTracker++);
         setChanged();
         notifyObservers();
