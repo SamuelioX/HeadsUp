@@ -41,7 +41,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.game);
 
         gameText = (TextView) findViewById(R.id.current_word_text);
-        model = new HeadsUpModel(0);
+        model = new HeadsUpModel(1);
         view = new HeadsUpView(model);
         gameText.setText(view.getCurrentWordDisplay());
         playGame();
