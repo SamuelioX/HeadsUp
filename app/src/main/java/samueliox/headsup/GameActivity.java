@@ -30,8 +30,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public final double ACTIONTHRESHOLD = 8.5;
     public final double UNBLOCKTHRESHOLD = 3.5;
     public boolean actionsAreBlocked = false;
-    final MediaPlayer correctSoundMP = MediaPlayer.create(this, R.raw.correct);
-    final MediaPlayer passSoundMP = MediaPlayer.create(this, R.raw.pass);
+
 
 
     @Override
@@ -50,6 +49,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         gameText = (TextView) findViewById(R.id.current_word_text);
         model = new HeadsUpModel(category);
         gameText.setText(model.getCurrentWord());
+
         playGame();
 
 
@@ -61,6 +61,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void playGame() {
         Button correctButton = (Button) findViewById(R.id.correct_button);
         Button skipButton = (Button) findViewById(R.id.skip_button);
+        final MediaPlayer correctSoundMP = MediaPlayer.create(this, R.raw.correct);
+        final MediaPlayer passSoundMP = MediaPlayer.create(this, R.raw.pass);
 
         correctButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +115,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        final MediaPlayer correctSoundMP = MediaPlayer.create(this, R.raw.correct);
+        final MediaPlayer passSoundMP = MediaPlayer.create(this, R.raw.pass);
         double zForce = event.values[2];
         if (zForce >= ACTIONTHRESHOLD && !isBlocked()) {
             pass();
