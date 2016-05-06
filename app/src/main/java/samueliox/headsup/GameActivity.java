@@ -5,13 +5,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.Observable;
@@ -30,6 +30,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public final double ACTIONTHRESHOLD = 8.5;
     public final double UNBLOCKTHRESHOLD = 3.5;
     public boolean actionsAreBlocked = false;
+    final MediaPlayer correctSoundMP = MediaPlayer.create(this, R.raw.correct);
+    final MediaPlayer passSoundMP = MediaPlayer.create(this, R.raw.pass);
 
 
     @Override
@@ -49,6 +51,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         model = new HeadsUpModel(category);
         gameText.setText(model.getCurrentWord());
         playGame();
+
+
     }
 
     /**
@@ -57,10 +61,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void playGame() {
         Button correctButton = (Button) findViewById(R.id.correct_button);
         Button skipButton = (Button) findViewById(R.id.skip_button);
+
         correctButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 correct();
+                correctSoundMP.start();
+
             }
         });
 
@@ -68,6 +75,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 pass();
+                passSoundMP.start();
             }
         });
 
@@ -108,8 +116,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         double zForce = event.values[2];
         if (zForce >= ACTIONTHRESHOLD && !isBlocked()) {
             pass();
+            passSoundMP.start();
         } else if (zForce <= -ACTIONTHRESHOLD && !isBlocked()) {
             correct();
+            correctSoundMP.start();
         } else if (zForce < UNBLOCKTHRESHOLD && zForce > -UNBLOCKTHRESHOLD && isBlocked()) {
             unblock();
         }
