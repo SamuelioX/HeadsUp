@@ -1,5 +1,7 @@
 package samueliox.headsup;
 
+import android.os.CountDownTimer;
+
 import java.util.*;
 
 /**

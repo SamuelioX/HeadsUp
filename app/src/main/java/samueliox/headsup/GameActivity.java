@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -27,6 +28,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mySensor;
     private SensorManager SM;
     private int category;
+    private TextView timer;
     public final double ACTIONTHRESHOLD = 8.5;
     public final double UNBLOCKTHRESHOLD = 3.5;
     public boolean actionsAreBlocked = false;
@@ -52,7 +54,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
         playGame();
 
-
     }
 
     /**
@@ -61,8 +62,19 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void playGame() {
         Button correctButton = (Button) findViewById(R.id.correct_button);
         Button skipButton = (Button) findViewById(R.id.skip_button);
+        timer=(TextView)findViewById(R.id.countDownTextView);
         final MediaPlayer correctSoundMP = MediaPlayer.create(this, R.raw.correct);
         final MediaPlayer passSoundMP = MediaPlayer.create(this, R.raw.pass);
+
+        //adding timer to the game
+        new CountDownTimer(60000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                timer.setText("Time Remaining: " + millisUntilFinished / 1000);
+            }
+            public void onFinish() {
+                endGame();
+            }
+        }.start();
 
         correctButton.setOnClickListener(new View.OnClickListener() {
             @Override
