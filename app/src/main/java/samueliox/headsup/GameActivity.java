@@ -32,7 +32,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public final double ACTIONTHRESHOLD = 8.5;
     public final double UNBLOCKTHRESHOLD = 3.5;
     public boolean actionsAreBlocked = false;
-
+    private MediaPlayer correctSoundMP;
+    private MediaPlayer passSoundMP;
 
 
     @Override
@@ -54,6 +55,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
         playGame();
 
+        correctSoundMP = MediaPlayer.create(this, R.raw.correct);
+        passSoundMP = MediaPlayer.create(this, R.raw.pass);
     }
 
     /**
@@ -127,14 +130,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        final MediaPlayer correctSoundMP = MediaPlayer.create(this, R.raw.correct);
-        final MediaPlayer passSoundMP = MediaPlayer.create(this, R.raw.pass);
         double zForce = event.values[2];
         if (zForce >= ACTIONTHRESHOLD && !isBlocked()) {
             pass();
+            passSoundMP.reset();
             passSoundMP.start();
         } else if (zForce <= -ACTIONTHRESHOLD && !isBlocked()) {
             correct();
+            correctSoundMP.reset();
             correctSoundMP.start();
         } else if (zForce < UNBLOCKTHRESHOLD && zForce > -UNBLOCKTHRESHOLD && isBlocked()) {
             unblock();
