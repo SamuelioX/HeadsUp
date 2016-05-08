@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -23,15 +24,29 @@ import java.util.Observer;
  * @version 4/20/2016
  */
 public class GameActivity extends AppCompatActivity implements SensorEventListener, Observer {
+    // Model which holds the state of the current game
     private HeadsUpModel model;
-    private TextView gameText;
-    private Sensor mySensor;
-    private SensorManager SM;
+
+    // The category being played
     private int category;
-    private TextView timer;
+
+    // Text box that shows the current word
+    private TextView gameText;
+
+    // Sensor that reads accelerometer input
+    private Sensor mySensor;
+
+    // Constants for thresholds from the accelerometers
     public final double ACTIONTHRESHOLD = 8.5;
     public final double UNBLOCKTHRESHOLD = 3.5;
+
+    // Used in logic that calms down the accelerometer actions.
     public boolean actionsAreBlocked = false;
+
+    // A reference to the timer.
+    private CountDownTimer countDownTimer;
+
+    // Used for playing sound effects.
     private MediaPlayer correctSoundMP;
     private MediaPlayer passSoundMP;
 
@@ -47,38 +62,46 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
         //set content view AFTER ABOVE sequence (to avoid crash)
         this.setContentView(R.layout.game);
+
+        // gets category id and build model with it.
         category = getIntent().getIntExtra("category", -1);
-
-        gameText = (TextView) findViewById(R.id.current_word_text);
         model = new HeadsUpModel(category);
-        gameText.setText(model.getCurrentWord());
+        model.addObserver(this);
 
-        playGame();
-
-        correctSoundMP = MediaPlayer.create(this, R.raw.correct);
-        passSoundMP = MediaPlayer.create(this, R.raw.pass);
+        // starts the game
+        initializeGame();
     }
 
     /**
      * Method that starts the game, setups up buttons and actions
      */
-    public void playGame() {
-        Button correctButton = (Button) findViewById(R.id.correct_button);
-        Button skipButton = (Button) findViewById(R.id.skip_button);
-        timer=(TextView)findViewById(R.id.countDownTextView);
-        final MediaPlayer correctSoundMP = MediaPlayer.create(this, R.raw.correct);
-        final MediaPlayer passSoundMP = MediaPlayer.create(this, R.raw.pass);
+    private void initializeGame() {
+        // Initialize the first word
+        gameText = (TextView) findViewById(R.id.current_word_text);
+        gameText.setText(model.getCurrentWord());
 
-        //adding timer to the game
-        new CountDownTimer(60000, 1000) {
+        // Initialize sound effects
+        correctSoundMP = MediaPlayer.create(this, R.raw.correct);
+        passSoundMP = MediaPlayer.create(this, R.raw.pass);
+
+        //adds timer to the game. Ticks every tenth of a second.
+        final TextView timer = (TextView) findViewById(R.id.countDownTextView);
+        countDownTimer = new CountDownTimer(60000, 100) {
             public void onTick(long millisUntilFinished) {
-                timer.setText("Time Remaining: " + millisUntilFinished / 1000);
+                // Format the time left to a single decimal place and update textbox.
+                DecimalFormat df = new DecimalFormat("0.0");
+                String timeLeft = df.format(millisUntilFinished / 1000d);
+                timer.setText("Time Remaining: " + timeLeft);
             }
+            // When the timer is over, the game ends.
             public void onFinish() {
                 endGame();
             }
-        }.start();
+        };
+        countDownTimer.start();
 
+        // Setup correct button
+        Button correctButton = (Button) findViewById(R.id.correct_button);
         correctButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +111,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        // Setup pass button
+        Button skipButton = (Button) findViewById(R.id.skip_button);
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,22 +121,18 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
-        //Create our SensorManager
-        SM = (SensorManager) getSystemService(SENSOR_SERVICE);
-
-        //Accelerometer Sensor
+        // Setup sensor for receiving accelerometer input
+        SensorManager SM = (SensorManager) getSystemService(SENSOR_SERVICE);
         mySensor = SM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        //Register sensor Listener
         SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
-
-        model.addObserver(this);
     }
 
     /**
      * Method that ends the game and brings up the scoreboard activity
      */
-    public void endGame() {
+    private void endGame() {
+        // Stop timer in case it hasn't trigger yet.
+        countDownTimer.cancel();
 
         //send intent into scoreboard activity
         Intent intent = new Intent(getApplicationContext(), ScoreboardActivity.class);
@@ -130,48 +151,62 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        double zForce = event.values[2];
+        // Get acceleromter from z-axis
+        int zAxis = 2;
+        double zForce = event.values[zAxis];
+
+        // if phone is tilted up
         if (zForce >= ACTIONTHRESHOLD && !isBlocked()) {
             pass();
             passSoundMP.reset();
             passSoundMP.start();
-        } else if (zForce <= -ACTIONTHRESHOLD && !isBlocked()) {
+        }
+        // If phone is tlted down
+        else if (zForce <= -ACTIONTHRESHOLD && !isBlocked()) {
             correct();
             correctSoundMP.reset();
             correctSoundMP.start();
-        } else if (zForce < UNBLOCKTHRESHOLD && zForce > -UNBLOCKTHRESHOLD && isBlocked()) {
+        }
+        // When phone it tilted back straight. Prevents unintended actions.
+        else if (zForce < UNBLOCKTHRESHOLD && zForce > -UNBLOCKTHRESHOLD && isBlocked()) {
             unblock();
         }
     }
 
+    // Determines if the phone has returned to normal angle after it's been tilted up or down.
     private boolean isBlocked() {
         return actionsAreBlocked;
     }
 
+    // Unblock future actions. Called when phone is tilted back straight.
     private void unblock() {
         actionsAreBlocked = false;
     }
 
+    // Used to mark the current work correct
     private void correct() {
         model.addCorrectWord();
         actionsAreBlocked = true;
     }
 
+    // Used the pass the current word
     private void pass() {
         model.skipCurrentWord();
         actionsAreBlocked = true;
     }
 
+    // This is the observer code. When the model changes state, it will trigger this method
+    // so that the UI gets updated.
     @Override
     public void update(Observable observable, Object data) {
-        String nextWord = model.getCurrentWord();
-
+        // See if the game is over.
         if (model.checkGameOver()) {
-            //TODO gameover functionality
             endGame();
             return;
         }
-        gameText.setText(nextWord);
 
+        // Update the current word
+        String nextWord = model.getCurrentWord();
+        gameText.setText(nextWord);
     }
 }
