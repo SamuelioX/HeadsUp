@@ -11,7 +11,7 @@ public class HeadsUpModel extends Observable {
     public static final String[] animalList = {"cat", "dog", "rat", "moose", "reindeer", "ant",
             "bee", "hawk", "pigeon", "seagull", "raven", "mongoose", "snake", "bear"};
     public static final String[] celebList = {"Tom Hanks", "Ellen", "George Clooney",
-            "Tina Fey", "Alec Baldwin", "Harrison Ford", "Brad Pitt", "Lindsay Lohan", "Ryan Gosling" +
+            "Tina Fey", "Alec Baldwin", "Harrison Ford", "Brad Pitt", "Lindsay Lohan", "Ryan Gosling",
             "Adele", "Halle Barry", "Michael Jackson", "Taylor Swift", "Paul McCartney",
             "Ringo Starr", "John Lennon", "George Harrison"};
     public static final String[] cartoonList = {"The Simpsons", "Futurama", "Family Guy",
