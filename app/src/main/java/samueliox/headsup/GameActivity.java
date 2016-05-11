@@ -20,8 +20,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * @author Samuel No
- * @version 4/20/2016
+ * Activity for when the game is underway.
  */
 public class GameActivity extends AppCompatActivity implements SensorEventListener, Observer {
     // Model which holds the state of the current game
@@ -51,6 +50,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private MediaPlayer passSoundMP;
 
 
+    /**
+     * Life cycle method that initializes this activity
+     * @param savedInstanceState any saves state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,11 +147,20 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         finish();
     }
 
+    /**
+     * Required for accelerometer interface. Not used.
+     * @param sensor info for sensor
+     * @param accuracy amount of accuracy
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         //not in use
     }
 
+    /**
+     * Call back method to give the game accelerometer info
+     * @param event state of the accelerometer
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         // Get acceleromter from z-axis

@@ -1,26 +1,39 @@
 package samueliox.headsup;
 
-import android.os.CountDownTimer;
-
 import java.util.*;
 
 /**
- * Created by samuel on 4/14/2016.
+ * This class is a model that holds the state of the game.
  */
 public class HeadsUpModel extends Observable {
-    public static final String[] animalList = {"cat", "dog", "rat", "moose", "reindeer", "ant",
+    // Animals for animal category
+    private static final String[] animalList = {"cat", "dog", "rat", "moose", "reindeer", "ant",
             "bee", "hawk", "pigeon", "seagull", "raven", "mongoose", "snake", "bear"};
-    public static final String[] celebList = {"Tom Hanks", "Ellen", "George Clooney",
+
+    // Celebrities for celebrity category
+    private static final String[] celebList = {"Tom Hanks", "Ellen", "George Clooney",
             "Tina Fey", "Alec Baldwin", "Harrison Ford", "Brad Pitt", "Lindsay Lohan", "Ryan Gosling",
             "Adele", "Halle Barry", "Michael Jackson", "Taylor Swift", "Paul McCartney",
             "Ringo Starr", "John Lennon", "George Harrison"};
-    public static final String[] cartoonList = {"The Simpsons", "Futurama", "Family Guy",
+
+    // Cartoons for cartoon category
+    private static final String[] cartoonList = {"The Simpsons", "Futurama", "Family Guy",
             "Bob's Burgers", "Archer", "Aqua Teen Hunger Force", "The Flintstones",
             "The Jetsons", "Dragon Ball Z", "Pokemon", "Teenage Mutant Ninja Turtles"};
 
-    private int scoreCounter, listTracker;
+    // Keeps track of the score
+    private int scoreCounter;
+
+    // Keeps track of the current index in the shuffled array of words
+    private int listTracker;
+
+    // The current word
     private String currentWord;
+
+    // The shuffled list of words
     private List<String> shuffledLibrary;
+
+    // Keeps track of correct words, and skipped words
     private StringBuilder allCorrectWords, allSkippedWords;
 
     public HeadsUpModel(int category) {

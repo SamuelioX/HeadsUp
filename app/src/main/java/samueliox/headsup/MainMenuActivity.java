@@ -13,17 +13,29 @@ import android.widget.Button;
 
 import java.util.Random;
 
+/**
+ * This activity is for the main menu. Users select the category to start the game with.
+ */
 public class MainMenuActivity extends AppCompatActivity {
-    //constants
+    // Celebrity category id
     public static final int CELEBCATEGORY = 0;
+
+    // Animal category id
     public static final int ANIMALCATEGORY = 1;
+
+    // Cartoon category id
     public static final int CARTOONCATEGORY = 2;
 
+    /**
+     * Life cycle method that is called to initialize this activity
+     * @param savedInstanceState any saves state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //buttons that set which game mode is played
+
+        // Button to start the game with a random category
         Button playButton = (Button)findViewById(R.id.play_button);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,6 +47,8 @@ public class MainMenuActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Button to start game with celeb category
         Button celebButton = (Button)findViewById(R.id.category_button1);
         celebButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +58,8 @@ public class MainMenuActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Button to start game with anmimal category
         Button animalButton = (Button)findViewById(R.id.category_button2);
         animalButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +69,8 @@ public class MainMenuActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Button to start game with animal activyt
         Button cartoonButton = (Button)findViewById(R.id.category_button3);
         cartoonButton.setOnClickListener(new View.OnClickListener() {
             @Override

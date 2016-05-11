@@ -13,9 +13,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 /**
- * Created by samuel on 4/20/2016.
+ * This activity is for the end of the game. It shows the results and lets users start over.
  */
 public class ScoreboardActivity extends AppCompatActivity {
+    /**
+     * Life cycle method called when score board is created
+     * @param savedInstanceState any saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +32,7 @@ public class ScoreboardActivity extends AppCompatActivity {
         //set content view AFTER ABOVE sequence (to avoid crash)
         setContentView(R.layout.scoreboard);
 
-        //textviews
+        //textviews showing results of the game
         TextView currentWordText = (TextView)findViewById(R.id.correct_words_text);
         TextView skippedWordText = (TextView)findViewById(R.id.skipped_words_text);
         TextView scoreText = (TextView)findViewById(R.id.score_text);
@@ -39,6 +43,7 @@ public class ScoreboardActivity extends AppCompatActivity {
         String correctWords = getIntent().getStringExtra("correctWords");
         String skippedWords = getIntent().getStringExtra("skippedWords");
 
+        // button to reply last played category
         Button replayButton = (Button)findViewById(R.id.replay_button);
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +54,7 @@ public class ScoreboardActivity extends AppCompatActivity {
             }
         });
 
+        // Button to go back to main menu
         Button mainMenuButton = (Button)findViewById(R.id.main_menu_button);
         mainMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
