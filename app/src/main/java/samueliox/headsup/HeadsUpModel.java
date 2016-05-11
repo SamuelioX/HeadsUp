@@ -3,7 +3,7 @@ package samueliox.headsup;
 import java.util.*;
 
 /**
- * This class is a model that holds the state of the game.
+ * This is the model that holds the state of the game.
  */
 public class HeadsUpModel extends Observable {
     // Animals for animal category
@@ -36,6 +36,10 @@ public class HeadsUpModel extends Observable {
     // Keeps track of correct words, and skipped words
     private StringBuilder allCorrectWords, allSkippedWords;
 
+    /**
+     * Constructor takes the category
+     * @param category the category Id that the model instance will use.
+     */
     public HeadsUpModel(int category) {
         super();
         //keeps score
@@ -69,13 +73,8 @@ public class HeadsUpModel extends Observable {
         setCurrentWord();
     }
 
-    /**
-     * Method that shuffles a library based on the category given
-     * @param category which category a person chooses
-     * @return the shuffled library based on the category chosen
-     * @throws IllegalArgumentException
-     */
-    public List<String> shuffleList(int category){
+    // Method that shuffles a library based on the category given
+    private List<String> shuffleList(int category){
         if(category < 0 || category > 2){
             throw new IllegalArgumentException("The category number is not valid");
         }
@@ -84,10 +83,6 @@ public class HeadsUpModel extends Observable {
         return shuffledList;
     }
 
-    public List<String> getShuffledLibrary(){
-        return shuffledLibrary;
-    }
-    
     /**
      * Method that adds the score up, and strikes the current word
      * from the library used
@@ -113,11 +108,8 @@ public class HeadsUpModel extends Observable {
         return scoreCounter;
     }
     
-    /**
-     * Method that gets a library of words under a category
-     * @param category the category that was selected
-     */
-    public String[] getLibrary(int category){
+    //gets a library of words under a category
+    private String[] getLibrary(int category){
         switch(category) {
             case 0:
                 return celebList;
@@ -154,7 +146,7 @@ public class HeadsUpModel extends Observable {
      * @return true if the listracker is greater or equal to the shuffled list
      */
     public boolean checkGameOver(){
-        return listTracker >= getShuffledLibrary().size();
+        return listTracker >= shuffledLibrary.size();
     }
 
     /**
@@ -175,13 +167,6 @@ public class HeadsUpModel extends Observable {
         return allSkippedWords;
     }
 
-    /**
-     * Method that returns where in the library we are
-     * @return place where we left off
-     */
-    public int getListTracker(){
-        return listTracker;
-    }
     /**
      * Method that resets the game state so another game can be played
      */
